@@ -172,6 +172,7 @@ Its easy to do with dagger:
 
 * define the application class which creates an object Graph to handle dependencies. Thats boilerplate but you need it only once.
 
+For example
 
     public class MyApplication extends Application {
 
