@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="prompt_owner">owner</string>
+    <string name="prompt_repo">Repo</string>
+    <string name="action_check">Check now</string>
+    <string name="result">enter owner and repo</string>
+</resources>
