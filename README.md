@@ -222,14 +222,14 @@ check.setOnClickListener(new View.OnClickListener() {
 * Inject the elements by the @Inject annotation in your code
 
 
-  public class MyActivity extends Activity {
+    public class MyActivity extends Activity {
 
-    @Inject
-    HelloWordService helloWordService;
-    // ... use the service wherever you want
-    // there will only one instance of it
+        @Inject
+        HelloWordService helloWordService;
+        // ... use the service wherever you want
+        // there will only one instance of it
 
-  }
+    }
 
   see http://square.github.io/dagger/ for details
 
@@ -259,8 +259,8 @@ check.setOnClickListener(new View.OnClickListener() {
 
   See for example:
 
-  * http://antonioleiva.com/mvp-android/
-  * https://github.com/antoniolg/androidmvp/tree/master/app/src/main/java/com/antonioleiva/mvpexample/app/Login
+* http://antonioleiva.com/mvp-android/
+* https://github.com/antoniolg/androidmvp/tree/master/app/src/main/java/com/antonioleiva/mvpexample/app/Login
 
 
 #### Http Calls
