@@ -193,7 +193,9 @@ Its easy to do with dagger:
     }
     ...
 
-* Define one module to define the things you want to inject. In this case we will only provide a singleton of type HelloWordService to our Activity
+* Define one module to define the things you want to inject. In this case we will only provide a singleton of type HelloWordService to our Activity.
+
+For example
 
 
     public class MyModule {
@@ -216,7 +218,8 @@ Its easy to do with dagger:
         }
         ...
 
-* Inject the elements by the @Inject annotation in your code
+* Inject the elements by the @Inject annotation in your code.
+
 
     public class MyActivity extends Activity {
 
