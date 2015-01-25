@@ -220,6 +220,8 @@ For example
 
 * Inject the elements by the @Inject annotation in your code.
 
+For example
+
 
     public class MyActivity extends Activity {
 
