@@ -1,4 +1,4 @@
-package de.example.michaelgruczel.betterexample;
+package de.example.michaelgruczel.betterexample.ui.view;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,23 +8,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import de.example.michaelgruczel.betterexample.data.CheckTask;
-import de.example.michaelgruczel.betterexample.events.CheckEvent;
-import timber.log.Timber;
+import de.example.michaelgruczel.betterexample.MyApplication;
+import de.example.michaelgruczel.betterexample.R;
+import de.example.michaelgruczel.betterexample.ui.presenter.MainPresenter;
 
-public class GithubActivity extends Activity {
+public class GithubActivity extends Activity implements MainPresenter.GithubView {
 
     @InjectView(R.id.owner) EditText owner;
     @InjectView(R.id.repo) EditText repo;
     @InjectView(R.id.check) Button check;
     @InjectView(R.id.result) TextView result;
+    private MainPresenter presenter;
 
     @Inject
     Bus eventsBus;
@@ -35,30 +35,29 @@ public class GithubActivity extends Activity {
         MyApplication.get(getApplicationContext()).inject(this);
         setContentView(R.layout.activity_github);
         ButterKnife.inject(this);
+
+        presenter = new MainPresenter(eventsBus, this);
     }
 
     @OnClick(R.id.check)
     public void check(View view) {
-        new CheckTask(eventsBus, owner.getText().toString(), repo.getText().toString()).execute();
+        presenter.checkTasks(owner.getText().toString(), repo.getText().toString());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Timber.d("register at event bus");
-        eventsBus.register(this);
+        presenter.register();
     }
 
     @Override
     public void onPause() {
         super.onStop();
-        Timber.d("unregister at event bus");
-        eventsBus.unregister(this);
+        presenter.unregister();
     }
 
-    @Subscribe
-    public void dataAvailable(CheckEvent event) {
-        result.setText("" + event.getCommits());
+    public void showCommits(int number) {
+        result.setText("" + number);
     }
 
 }

@@ -40,15 +40,19 @@ public class CheckTask extends AsyncTask<Void, Void, Integer> {
 
     @Override
     protected Integer doInBackground(Void... params) {
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(API_URL)
-                .build();
-        GitHub github = restAdapter.create(GitHub.class);
         int contributionsSum = 0;
-        List<Contributor> contributors = github.contributors(anOwner, aRepo);
-        for (Contributor contributor : contributors) {
-            contributionsSum += contributor.contributions;
+        try {
+            RestAdapter restAdapter = new RestAdapter.Builder()
+                    .setEndpoint(API_URL)
+                    .build();
+            GitHub github = restAdapter.create(GitHub.class);
+            List<Contributor> contributors = github.contributors(anOwner, aRepo);
+            for (Contributor contributor : contributors) {
+                contributionsSum += contributor.contributions;
+            }
+        } catch (Exception e) {
+            // TODO
+            e.printStackTrace();
         }
         return contributionsSum;
     }

@@ -6,8 +6,15 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
 
+import dagger.Module;
 import dagger.Provides;
+import de.example.michaelgruczel.betterexample.ui.view.GithubActivity;
 
+@Module(
+        complete = true,
+        library = true,
+        injects = { MyApplication.class, GithubActivity.class }
+)
 public class MyModule {
 
     private final Application app;
