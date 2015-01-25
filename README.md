@@ -117,84 +117,81 @@ check.setOnClickListener(new View.OnClickListener() {
 
   See http://jakewharton.github.io/butterknife/ for details
 
-  #### Decoupling by a bus system
+#### Decoupling by a bus system
 
-  Complex and slow logic should not be done on the UI thread, because this
-  will block the UI interactions. So you extract the logic to asynchronous backend tasks.
-  Often you want to mainipulate the UI directly after the logic was executed.
-  This often force you to put the backend classesin the UI layer (e.g. Activity)
-  or to pass all the UI elements to the backend tasks. The better way is to trigger the
-  backend task and to register on a bus. The backend tasks will execute all the
-  logic and after the result is available it will add the result to the bus to inform the ui.
+Complex and slow logic should not be done on the UI thread, because this
+will block the UI interactions. So you extract the logic to asynchronous backend tasks.
+Often you want to mainipulate the UI directly after the logic was executed.
+This often force you to put the backend classesin the UI layer (e.g. Activity)
+or to pass all the UI elements to the backend tasks. The better way is to trigger the
+backend task and to register on a bus. The backend tasks will execute all the
+logic and after the result is available it will add the result to the bus to inform the ui.
 
-  So instead of having your tasks in the same class like the activity
-  or passing ui elements as parameters, extract your async tasks and
-  if the task is finished send an event.
+So instead of having your tasks in the same class like the activity
+or passing ui elements as parameters, extract your async tasks and
+if the task is finished send an event.
 
-  // Activity handles UI
-  public class YourActivity extends Activity {
-    ...
-    @Subscribe
-    public void dataAvailable(YourEvent event) {
-      // do something in the UI
-    }
-    ...
-  }
+        // Activity handles UI
+        public class YourActivity extends Activity {
+        ...
+        @Subscribe
+        public void dataAvailable(YourEvent event) {
+            // do something in the UI
+        }
+        ...
 
-  // decoupled backend task
-  public class YourTask extends AsyncTask<Void, Void, Integer> {
-    ...
-    @Override
-    protected void onPostExecute(final Integer result) {
-      eventBus.post(new YourEvent(result));
-    }
-    ...
-  }
 
-  Every class can register and unregister at the bus to get messages.
+        // decoupled backend task
+        public class YourTask extends AsyncTask<Void, Void, Integer> {
+        ...
+        @Override
+        protected void onPostExecute(final Integer result) {
+           eventBus.post(new YourEvent(result));
+        }
+        ...
 
-  One library to do this is:
+Every class can register and unregister at the bus to get messages.
 
-  http://square.github.io/otto/
+One library to do this is: http://square.github.io/otto/
 
-  #### Dependency Injection
+#### Dependency Injection
 
-  There are a lot of advantages of dependency injection like:
+There are a lot of advantages of dependency injection like:
 
-  * Better tests by easy mocking of dependencies
-  * Often less code
-  * Better decoupling of logic
-  * ...
+* Better tests by easy mocking of dependencies
+* Often less code
+* Better decoupling of logic
+* ...
 
-  In the java world Spring and Guice are famous frameworks.
-  In android one famous framework for this is dagger
+In the java world Spring and Guice are famous frameworks.
+In android one famous framework for this is dagger
 
-  So instead of defining instances of everything in your classes or have a huge amount of static elements, it makes sense to inject elements.
+So instead of defining instances of everything in your classes or have a huge amount of static elements, it makes sense to inject elements.
 
-  Its easy to do with dagger:
+Its easy to do with dagger:
 
 * define the application class which creates an object Graph to handle dependencies. Thats boilerplate but you need it only once.
 
 
-    public class MyApplication extends Application {
+        public class MyApplication extends Application {
 
-    private ObjectGraph objectGraph;
+        private ObjectGraph objectGraph;
 
-    public static MyApplication get(Context applicationContext) {
-      return (MyApplication) applicationContext;
-    }
+        public static MyApplication get(Context applicationContext) {
+            return (MyApplication) applicationContext;
+        }
 
-    @Override
-    public void onCreate() {
-      super.onCreate();
-      objectGraph = ObjectGraph.create(new MyModule(this));
-      objectGraph.inject(this);
-    }
+        @Override
+        public void onCreate() {
+            super.onCreate();
+            objectGraph = ObjectGraph.create(new MyModule(this));
+            objectGraph.inject(this);
+        }
 
-    public void inject(Object object) {
-      objectGraph.inject(object);
-    }
-    ...
+        public void inject(Object object) {
+            objectGraph.inject(object);
+        }
+        ...
 
 * Define one module to define the things you want to inject. In this case we will only provide a singleton of type HelloWordService to our Activity
 
