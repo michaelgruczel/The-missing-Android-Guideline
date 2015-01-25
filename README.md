@@ -221,15 +221,14 @@ check.setOnClickListener(new View.OnClickListener() {
 
 * Inject the elements by the @Inject annotation in your code
 
-
-    public class MyActivity extends Activity {
+        public class MyActivity extends Activity {
 
         @Inject
         HelloWordService helloWordService;
         // ... use the service wherever you want
         // there will only one instance of it
 
-    }
+        }
 
   see http://square.github.io/dagger/ for details
 
