@@ -131,24 +131,24 @@ So instead of having your tasks in the same class like the activity
 or passing ui elements as parameters, extract your async tasks and
 if the task is finished send an event.
 
-        // Activity handles UI
-        public class YourActivity extends Activity {
-        ...
-        @Subscribe
-        public void dataAvailable(YourEvent event) {
-            // do something in the UI
-        }
-        ...
+    // Activity handles UI
+    public class YourActivity extends Activity {
+    ...
+    @Subscribe
+    public void dataAvailable(YourEvent event) {
+        // do something in the UI
+    }
+    ...
 
 
-        // decoupled backend task
-        public class YourTask extends AsyncTask<Void, Void, Integer> {
-        ...
-        @Override
-        protected void onPostExecute(final Integer result) {
-           eventBus.post(new YourEvent(result));
-        }
-        ...
+    // decoupled backend task
+    public class YourTask extends AsyncTask<Void, Void, Integer> {
+    ...
+    @Override
+    protected void onPostExecute(final Integer result) {
+       eventBus.post(new YourEvent(result));
+    }
+    ...
 
 Every class can register and unregister at the bus to get messages.
 
@@ -173,61 +173,61 @@ Its easy to do with dagger:
 * define the application class which creates an object Graph to handle dependencies. Thats boilerplate but you need it only once.
 
 
-        public class MyApplication extends Application {
+    public class MyApplication extends Application {
 
-        private ObjectGraph objectGraph;
+    private ObjectGraph objectGraph;
 
-        public static MyApplication get(Context applicationContext) {
-            return (MyApplication) applicationContext;
-        }
+    public static MyApplication get(Context applicationContext) {
+        return (MyApplication) applicationContext;
+    }
 
-        @Override
-        public void onCreate() {
-            super.onCreate();
-            objectGraph = ObjectGraph.create(new MyModule(this));
-            objectGraph.inject(this);
-        }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        objectGraph = ObjectGraph.create(new MyModule(this));
+        objectGraph.inject(this);
+    }
 
-        public void inject(Object object) {
-            objectGraph.inject(object);
-        }
-        ...
+    public void inject(Object object) {
+        objectGraph.inject(object);
+    }
+    ...
 
 * Define one module to define the things you want to inject. In this case we will only provide a singleton of type HelloWordService to our Activity
 
 
-        public class MyModule {
+    public class MyModule {
 
-          private final Application app;
+        private final Application app;
 
-          public MyModule(Application application) {
+        public MyModule(Application application) {
             this.app = application;
-          }
+        }
 
-          @Singleton
-          public Application provideApplication() {
+        @Singleton
+        public Application provideApplication() {
             return app;
-          }
+        }
 
-          @Provides
-          @Singleton
-          public HelloWordService provideEventsBus() {
+        @Provides
+        @Singleton
+        public HelloWordService provideEventsBus() {
             return new HelloWordService();
-          }
-          ...
+        }
+        ...
 
 * Inject the elements by the @Inject annotation in your code
 
-        public class MyActivity extends Activity {
+    public class MyActivity extends Activity {
 
         @Inject
         HelloWordService helloWordService;
         // ... use the service wherever you want
         // there will only one instance of it
 
-        }
+    }
 
-  see http://square.github.io/dagger/ for details
+see http://square.github.io/dagger/ for details
 
 #### MVP
 
@@ -280,30 +280,30 @@ Its easy to do with dagger:
 
   Version 2 is a litle bit more cleaner by using dagger (DI), butterknife (annotations), retrofit (restcalls), bus (decoupling)
 
-  see https://github.com/michaelgruczel/The-missing-Android-Guideline/tree/master/android-studio-workspace/Examples/betterapp/src/main/java/de/example/michaelgruczel/betterexample
+see https://github.com/michaelgruczel/The-missing-Android-Guideline/tree/master/android-studio-workspace/Examples/betterapp/src/main/java/de/example/michaelgruczel/betterexample
 
-  It is not less code and probably its a lot of boilerplate for such a small app.
-  But its much better seperated and if apps are getting bigger it will have a huge advantage.
+It is not less code and probably its a lot of boilerplate for such a small app.
+But its much better seperated and if apps are getting bigger it will have a huge advantage.
 
-  #### Other tools
+#### Other tools
 
-  The list is endless, depending on your need tale a look at ORM mappers (e.g. activedroid, GreenDAO, ORMlite), imageloader (e.g. picasso or Universal-Image-Loader) and many other.
+The list is endless, depending on your need tale a look at ORM mappers (e.g. activedroid, GreenDAO, ORMlite), imageloader (e.g. picasso or Universal-Image-Loader) and many other.
 
-  Maybe some links can help you:
+Maybe some links can help you:
 
-  * https://android-arsenal.com
-  * http://www.vogella.com/tutorials/AndroidUsefulLibraries/article.html
-  * https://github.com/codepath/android_guides/wiki/Must-Have-Libraries
+* https://android-arsenal.com
+* http://www.vogella.com/tutorials/AndroidUsefulLibraries/article.html
+* https://github.com/codepath/android_guides/wiki/Must-Have-Libraries
 
 ## Test Apps
 
 ## Monitor App
 
-  TODO:
+TODO:
 
-  * crashlytics
-  * crittercism
-  * ...
+* crashlytics
+* crittercism
+* ...
 
 ## Track user behaviour
 
