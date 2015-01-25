@@ -93,29 +93,29 @@ Take a look at Butterknife as one option and you will realize this immedialtelly
 
 With butternkife you can write
 
-@InjectView(R.id.check) Button check;
-...
-@OnClick(R.id.check)
-public void check(View view) {
-  // do stuff
-}
+    @InjectView(R.id.check) Button check;
+    ...
+    @OnClick(R.id.check)
+    public void check(View view) {
+        // do stuff
+    }
 
 instead of for example
 
-private Button check;
-...
-check = (Button) findViewById(R.id.check);
-check.setOnClickListener(new View.OnClickListener() {
-  @Override
-  public void onClick(View v) {
-    // do stuff
-  }
-  });
+    private Button check;
+    ...
+    check = (Button) findViewById(R.id.check);
+    check.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            // do stuff
+        }
+    });
 
-  That's only a small thing, but if you have big classes with a huge amount of functions,
-  it will already make a difference
+That's only a small thing, but if you have big classes with a huge amount of functions,
+it will already make a difference
 
-  See http://jakewharton.github.io/butterknife/ for details
+See http://jakewharton.github.io/butterknife/ for details
 
 #### Decoupling by a bus system
 
