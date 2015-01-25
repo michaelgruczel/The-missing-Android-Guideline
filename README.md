@@ -199,25 +199,25 @@ check.setOnClickListener(new View.OnClickListener() {
 * Define one module to define the things you want to inject. In this case we will only provide a singleton of type HelloWordService to our Activity
 
 
-    public class MyModule {
+        public class MyModule {
 
-    private final Application app;
+          private final Application app;
 
-    public MyModule(Application application) {
-      this.app = application;
-    }
+          public MyModule(Application application) {
+            this.app = application;
+          }
 
-    @Singleton
-    public Application provideApplication() {
-      return app;
-    }
+          @Singleton
+          public Application provideApplication() {
+            return app;
+          }
 
-    @Provides
-    @Singleton
-    public HelloWordService provideEventsBus() {
-      return new HelloWordService();
-    }
-    ...
+          @Provides
+          @Singleton
+          public HelloWordService provideEventsBus() {
+            return new HelloWordService();
+          }
+          ...
 
 * Inject the elements by the @Inject annotation in your code
 
