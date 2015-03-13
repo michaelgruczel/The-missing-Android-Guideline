@@ -303,14 +303,26 @@ Maybe some links can help you:
 
 ## Test Apps
 
+* Appium
+* Okhttp Mock server
+* stetho
+
+## cont delivery
+
+ * jenkins
+ * gradle
+ * jenkins job generation
+ * upload by Google api
+
 ## Monitor App
 
-TODO:
-
+* timber
 * crashlytics
 * crittercism
 * ...
 
 ## Track user behaviour
 
-## make some A/B Tests
+ * Track user behaviour e.g. Adjust
+ * A/B Test e.g. appium
+ * user feedback e.g. helpshift
