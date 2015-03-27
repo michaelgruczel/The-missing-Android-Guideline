@@ -471,8 +471,8 @@ I will not summarize it here and i will not show everything here and I will not 
  * user feedback e.g. helpshift
 
 
- [1]: https://github.com/michaelgruczel/The-missing-Android-Guideline/crittercism1.png
- [2]: https://github.com/michaelgruczel/The-missing-Android-Guideline/crittercism2.png
- [3]: https://github.com/michaelgruczel/The-missing-Android-Guideline/crittercism3.png
- [4]: https://github.com/michaelgruczel/The-missing-Android-Guideline/crittercism4.png
- [5]: https://github.com/michaelgruczel/The-missing-Android-Guideline/crittercism5.png
+ [1]: https://raw.githubusercontent.com/michaelgruczel/The-missing-Android-Guideline/master/crittercism1.png
+ [2]: https://raw.githubusercontent.com/michaelgruczel/The-missing-Android-Guideline/master/crittercism2.png
+ [3]: https://raw.githubusercontent.com/michaelgruczel/The-missing-Android-Guideline/master/crittercism3.png
+ [4]: https://raw.githubusercontent.com/michaelgruczel/The-missing-Android-Guideline/master/crittercism4.png
+ [5]: https://raw.githubusercontent.com/michaelgruczel/The-missing-Android-Guideline/master/crittercism5.png
