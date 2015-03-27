@@ -2,6 +2,8 @@ package de.example.michaelgruczel.betterexample;
 
 import android.app.Application;
 
+import com.facebook.stetho.okhttp.StethoInterceptor;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
@@ -32,5 +34,13 @@ public class MyModule {
     @Singleton
     public Bus provideEventsBus() {
         return new Bus();
+    }
+
+    @Provides
+    @Singleton
+    public OkHttpClient provideOkHttpClient() {
+        OkHttpClient client = new OkHttpClient();
+        client.networkInterceptors().add(new StethoInterceptor());
+        return client;
     }
 }

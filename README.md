@@ -89,7 +89,7 @@ look at some libraries and concepts, which will simplify your work.
 #### Annotation frameworks
 
 Annotation frameworks like ButterKnife will just simplifiy your life.
-Take a look at Butterknife as one option and you will realize this immedialtelly.
+Take a look at Butterknife as one option and you will realize this immediatelly.
 
 With butternkife you can write
 
@@ -237,54 +237,148 @@ see http://square.github.io/dagger/ for details
 
 #### MVP
 
-  MVP stand for Model-View-Presenter. This is not library. It is a pattern to
-  decouple frontend UI from frontend logic.
-  This has the advantage of cleaner code, better tests and you have chance to
-  write different UI with the same logic (e.g. one UI for tablet and one for phones).
+MVP stand for Model-View-Presenter. This is not library. It is a pattern to decouple frontend UI from frontend logic.
+This has the advantage of cleaner code, better tests and you have chance to write different UIs with the same logic (e.g. one UI for tablet and one for phones).
 
-  So the view (which can be an activity or an implementation of a view) only
-  contains UI specific elements, like make login button with a given id invisible.
-  User interactions like user clicked login button are delegated to the presenter.
-  The view offers methods to implement the commands from the presenter.
-  For example if the presenter calls hide login area, then the view knows which
-  elements needs to be hidden.
+So the view (which can be an activity or an implementation of a view) only contains UI specific elements, like make login button with a given id invisible.
+User interactions like user clicked login button are delegated to the presenter.
+The view offers methods to implement the commands from the presenter.
+For example if the presenter calls hide login area, then the view knows which elements needs to be hidden.
 
-  The presenter interacts with the backend and triggers depending on the results
-  UI actions. For example, after the user clicked the login button, the view delegates the
-  login data to the presenter. The presenter tries the login in the backend.
-  If the login succeeds the presenter triggers the hiding of the login area on the view.
-  The presenter has no knowledge about the exact fields or UI layout, but the presenter decides
-  that the login area should not be visible any more.
+The presenter interacts with the backend and triggers depending on the results UI actions. For example, after the user clicked the login button, the view delegates the login data to the presenter. The presenter tries the login in the backend.
+If the login succeeds the presenter triggers the hiding of the login area on the view.
+The presenter has no knowledge about the exact fields or UI layout, but the presenter decides that the login area should not be visible any more.
 
-  The model is the domain layer.
+The model is the domain layer.
+
+One simple way to do it is to create a presenter which handles all
+the business logic and defines an interface which must be implemented by the views. The view delegate all actions to the presenter:
+
+    public class MainPresenter {
+
+      private GithubView view;
+
+      public MainPresenter(GithubView view) {
+        this.view = view;
+      }
+
+      public void retrieveNumberOfCommits(String owner, String repo) {
+        // retrieve the data
+        int numberOfCommits = ...
+        view.showCommits(numberOfCommits);
+      }
+
+      public interface GithubView {
+        public void showNumberOfCommits(int number);
+      }
+
+    }  
+
+    public class GithubActivity extends Activity implements MainPresenter.GithubView {
+
+      EditText owner;
+      EditText repo;
+      Button check;
+      TextView result;
+      private MainPresenter presenter;
+
+      @Override
+      protected void onCreate(Bundle savedInstanceState) {
+        ...
+        presenter = new MainPresenter(eventsBus, this);
+      }
+
+      @OnClick(R.id.check)
+      public void check(View view) {
+          presenter.retrieveNumberOfCommits(owner.getText().toString(), repo.getText().toString());
+      }  
+
+      public void showNumberOfCommits(int number) {
+        result.setText(String.valueOf(number));
+      }
+  }
 
 
-  See for example:
 
+See for example:
+
+* https://github.com/michaelgruczel/The-missing-Android-Guideline/tree/master/android-studio-workspace/Examples/betterapp/src/main/java/de/example/michaelgruczel/betterexample/ui
 * http://antonioleiva.com/mvp-android/
 * https://github.com/antoniolg/androidmvp/tree/master/app/src/main/java/com/antonioleiva/mvpexample/app/Login
 
 
 #### Http Calls
 
-  Depending on your needs, you should simplify you http calls.
+Depending on your needs, you mabye need http calls.
+In this case you can simplify a lot.
 
-  You can use for example OkHttp (http://square.github.io/okhttp/) or Retrofit (https://github.com/square/retrofit)
+You can use for example OkHttp (http://square.github.io/okhttp/) or Retrofit (https://github.com/square/retrofit)
 
-  TODO
+A very simple retrofit example you can find under:
+  https://github.com/square/retrofit/blob/master/samples/github-client/src/main/java/com/example/retrofit/GitHubClient.java  
 
-  https://api.github.com/repos/square/retrofit/contributors
-  https://github.com/square/retrofit/blob/master/samples/github-client/src/main/java/com/example/retrofit/GitHubClient.java
+I have added more or less the same code here only for completeness
+
+If you call https://api.github.com/repos/michaelgruczel/The-missing-Android-Guideline/contributors you will get something like:
+
+    [
+    {
+    "login": "michaelgruczel",
+    "id": 3057985,
+    "avatar_url": "https://avatars.githubusercontent.com/u/3057985?v=3",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/michaelgruczel",
+    "html_url": "https://github.com/michaelgruczel",
+    "followers_url": "https://api.github.com/users/michaelgruczel/followers",
+    "following_url": "https://api.github.com/users/michaelgruczel/following{/other_user}",
+    "gists_url": "https://api.github.com/users/michaelgruczel/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/michaelgruczel/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/michaelgruczel/subscriptions",
+    "organizations_url": "https://api.github.com/users/michaelgruczel/orgs",
+    "repos_url": "https://api.github.com/users/michaelgruczel/repos",
+    "events_url": "https://api.github.com/users/michaelgruczel/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/michaelgruczel/received_events",
+    "type": "User",
+    "site_admin": false,
+    "contributions": 16
+    }
+    ]
+
+Instead of parsing elements with a json parser you can parse it very simple to a java object. The mapping code you need is
+
+    static class Contributor {
+      String login;
+      int contributions;
+    }
+
+    interface GitHub {
+      @GET("/repos/{owner}/{repo}/contributors")
+      List<Contributor> contributors(
+        @Path("owner") String owner,
+        @Path("repo") String repo
+      );
+    }
+
+and then you can retrieve the object by
+
+    RestAdapter restAdapter = new RestAdapter.Builder()
+        .setEndpoint("https://api.github.com")
+        .build();
+
+    // Create an instance of our GitHub API interface.
+    GitHub github = restAdapter.create(GitHub.class);
+
+ see https://github.com/square/retrofit/blob/master/samples/github-client/src/main/java/com/example/retrofit/GitHubClient.java for the complete example
 
 #### Bring it together
 
-  In this repo you will find 2 apps which are doing the same thing. They count the number of github commits for a given repo of an owner.
+In this repo you will find 2 apps which are doing the same thing. They count the number of github commits for a given repo of an owner.
 
-  The version 1 is done by like it would be done on base of the Android guideline.
+The version 1 is done like it would be done on base of the Android guideline.
 
-  see https://github.com/michaelgruczel/The-missing-Android-Guideline/tree/master/android-studio-workspace/Examples/dirtyapp/src/main/java/de/example/michaelgruczel/dirtyexample
+see https://github.com/michaelgruczel/The-missing-Android-Guideline/tree/master/android-studio-workspace/Examples/dirtyapp/src/main/java/de/example/michaelgruczel/dirtyexample
 
-  Version 2 is a litle bit more cleaner by using dagger (DI), butterknife (annotations), retrofit (restcalls), bus (decoupling)
+Version 2 is a litle bit more cleaner by using dagger (DI), butterknife (annotations), retrofit (restcalls) and a bus (decoupling)
 
 see https://github.com/michaelgruczel/The-missing-Android-Guideline/tree/master/android-studio-workspace/Examples/betterapp/src/main/java/de/example/michaelgruczel/betterexample
 
@@ -293,7 +387,7 @@ But its much better seperated and if apps are getting bigger it will have a huge
 
 #### Other tools
 
-The list is endless, depending on your need tale a look at ORM mappers (e.g. activedroid, GreenDAO, ORMlite), imageloader (e.g. picasso or Universal-Image-Loader) and many other.
+The list is endless, depending on your needs. Take a look at ORM mappers (e.g. activedroid, GreenDAO, ORMlite), imageloader (e.g. picasso or Universal-Image-Loader) and many other.
 
 Maybe some links can help you:
 
@@ -301,11 +395,25 @@ Maybe some links can help you:
 * http://www.vogella.com/tutorials/AndroidUsefulLibraries/article.html
 * https://github.com/codepath/android_guides/wiki/Must-Have-Libraries
 
+## Debug App
+
+### Stetho
+
+Stetho visualises http calls in chrome like you know it e.g. from firebug for websites.
+Take a look at http://facebook.github.io/stetho/
+
 ## Test Apps
 
+### OkHttp Mock Server
+
+Sometimes you need external services and its easier to mock them in a test.
+There is a simple server you can start in your test to simulate the external resource.
+
+see https://github.com/square/okhttp/tree/master/mockwebserver for details
+
+### Other
+
 * Appium
-* Okhttp Mock server
-* stetho
 
 ## cont delivery
 
@@ -316,13 +424,55 @@ Maybe some links can help you:
 
 ## Monitor App
 
-* timber
-* crashlytics
-* crittercism
-* ...
+There are several providers avaliable which helps you to track crashes.
+2 Examples are crashlytics and crittercism
+I will only show one example with crittercism.
+
+register at http://www.crittercism.com
+
+add the lib to your dependencies and add Crittercism.initialize(getApplicationContext(), "your code"); to the start up of your app or activity.
+![crittercism 1][1]
+![crittercism 2][2]
+![crittercism 3][3]
+
+Let us now create a crash
+
+  public class MyApplication extends Application {
+
+    public static MyApplication get(Context applicationContext) {
+
+        return (MyApplication) applicationContext;
+    }
+
+    @Override
+    public void onCreate() {
+
+        super.onCreate();
+        ...
+        Crittercism.initialize(getApplicationContext(), "...8cc8cc8cc8cc");
+        throw new RuntimeException("stupid mistake");
+    }
+  }
+
+The crash data will ow be send to crittercism and is visible in your dashboard.
+
+![crittercism 4][4]
+![crittercism 5][5]
+
+There are additional features like request times, organizing by version, manufacturer, integrated bugtracking, ...
+I will not summarize it here and i will not show everything here and I will not compare the providers, but take sure that you have at least one running monitoring system for your apps.
+
+
 
 ## Track user behaviour
 
  * Track user behaviour e.g. Adjust
  * A/B Test e.g. appium
  * user feedback e.g. helpshift
+
+
+ [1]: https://github.com/michaelgruczel/The-missing-Android-Guideline/crittercism1.png
+ [2]: https://github.com/michaelgruczel/The-missing-Android-Guideline/crittercism2.png
+ [3]: https://github.com/michaelgruczel/The-missing-Android-Guideline/crittercism3.png
+ [4]: https://github.com/michaelgruczel/The-missing-Android-Guideline/crittercism4.png
+ [5]: https://github.com/michaelgruczel/The-missing-Android-Guideline/crittercism5.png

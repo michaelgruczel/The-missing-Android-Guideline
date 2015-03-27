@@ -1,4 +1,4 @@
-package de.example.michaelgruczel.dirtyexample;
+package de.example.michaelgruczel.betterexample;
 
 import android.app.Activity;
 import android.os.AsyncTask;

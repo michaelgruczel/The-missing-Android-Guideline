@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -29,6 +30,9 @@ public class GithubActivity extends Activity implements MainPresenter.GithubView
     @Inject
     Bus eventsBus;
 
+    @Inject
+    OkHttpClient okHttpClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +40,7 @@ public class GithubActivity extends Activity implements MainPresenter.GithubView
         setContentView(R.layout.activity_github);
         ButterKnife.inject(this);
 
-        presenter = new MainPresenter(eventsBus, this);
+        presenter = new MainPresenter(eventsBus, this, okHttpClient);
     }
 
     @OnClick(R.id.check)

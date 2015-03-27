@@ -1,6 +1,7 @@
 package de.example.michaelgruczel.betterexample.ui.presenter;
 
 
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -12,10 +13,12 @@ public class MainPresenter {
 
     private Bus eventsBus;
     private GithubView view;
+    private OkHttpClient okHttpClient;
 
-    public MainPresenter(Bus eventsBus, GithubView view) {
+    public MainPresenter(Bus eventsBus, GithubView view, OkHttpClient okHttpClient) {
         this.eventsBus = eventsBus;
         this.view = view;
+        this.okHttpClient = okHttpClient;
     }
 
     public void register() {
@@ -29,7 +32,7 @@ public class MainPresenter {
     }
 
     public void checkTasks(String owner, String repo) {
-        new CheckTask(eventsBus, owner, repo).execute();
+        new CheckTask(eventsBus, owner, repo, okHttpClient).execute();
     }
 
     @Subscribe

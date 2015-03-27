@@ -2,12 +2,14 @@ package de.example.michaelgruczel.betterexample.data;
 
 import android.os.AsyncTask;
 
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
 import java.util.List;
 
 import de.example.michaelgruczel.betterexample.events.CheckEvent;
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
@@ -31,11 +33,13 @@ public class CheckTask extends AsyncTask<Void, Void, Integer> {
     private final String anOwner;
     private final String aRepo;
     private Bus eventBus;
+    private OkHttpClient okHttpClient;
 
-    public CheckTask(Bus eventBus, String anOwner, String aRepo) {
+    public CheckTask(Bus eventBus, String anOwner, String aRepo, OkHttpClient okHttpClient) {
         this.eventBus = eventBus;
         this.anOwner = anOwner;
         this.aRepo = aRepo;
+        this.okHttpClient = okHttpClient;
     }
 
     @Override
@@ -44,6 +48,7 @@ public class CheckTask extends AsyncTask<Void, Void, Integer> {
         try {
             RestAdapter restAdapter = new RestAdapter.Builder()
                     .setEndpoint(API_URL)
+                    .setClient(new OkClient(okHttpClient))
                     .build();
             GitHub github = restAdapter.create(GitHub.class);
             List<Contributor> contributors = github.contributors(anOwner, aRepo);
